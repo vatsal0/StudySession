@@ -1,0 +1,30 @@
+{
+  "name": "studysession",
+  "version": "1.0.0",
+  "description": "study session app",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "test": "NODE_ENV=test jest --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vatsal0/StudySession.git"
+  },
+  "keywords": [
+    "idk"
+  ],
+  "author": "vatsal",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/vatsal0/StudySession/issues"
+  },
+  "homepage": "https://github.com/vatsal0/StudySession#readme",
+  "dependencies": {
+    "next": "^7.0.2",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0"
+  }
+}
