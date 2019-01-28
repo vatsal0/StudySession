@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const Container = styled.div`
+    background-color:#182628;
     font-family: "Segoe UI";
     text-align: center;
     position: fixed;
@@ -19,18 +20,22 @@ const Container = styled.div`
     }
     h1 {
         font: 4rem sans-serif;
-        display: block;
-        position: relative;
-        height: 50%;
+        height: 30%;
+    }
+    #or-container {
+        height: 16%;
+        line-height: 8em;
+        text-align: center;
+        p {
+            display: inline-block;
+            vertical-align: middle;
+            line-height: normal;
+            font-size: 1.5rem;
+        }
     }
     form {
         div {
-            input {
-                max-width: 20%;
-            }
-            label {
-                display: block;
-            }
+            max-width: 20%;
         }
     }
     

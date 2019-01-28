@@ -3,20 +3,25 @@ import Container from "./styles/LandingPageStyle"
 const LandingPage = (props) => {
     return (
         <div>
-            <Container className="teal darken-2">
-                <h1 className="light-green-text text-accent-2">
+            <Container className="">
+                <h1 className="grey-text text-lighten-4">
                     Study Session
                 </h1>
                 <form>
-                    <div className="row">
-                        <label htmlFor="join_code" className="light-blue-text text-lighten-3 text-accent-4">
+                    <div className="row input-field">
+                        <input id="join_code" type="text" className="validate blue-text text-lighten-3" />
+                        <label htmlFor="join_code" className="green-text text-lighten-3">
                             Enter a session code
                         </label>
-                        <input id="join_code" type="text" className="validate" />
                     </div>
                 </form>
-                <button className="btn teal lighten-2 waves-effect waves-light">
+                <button className="btn teal lighten-1 waves-effect waves-light">
                     Join
+                </button>
+                <div id="or-container"><p className="grey-text text-lighten-4">OR</p></div>
+                <p className="green-text text-lighten-3"><strong>Start a new session</strong></p>
+                <button className="btn teal lighten-1 waves-effect waves-light">
+                    Create
                 </button>
             </Container>
         </div>
