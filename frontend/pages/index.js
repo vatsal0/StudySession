@@ -1,5 +1,12 @@
 import Head from "next/head";
 import LandingPage from "../components/LandingPage";
+import io from "socket.io-client";
+
+var socket = io('http://localhost:8000');
+socket.on('connect', function(){
+    console.log("Connected to server side");
+});
+
 
 const Main = (props) => {
     return (
@@ -10,7 +17,7 @@ const Main = (props) => {
                 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
                 <script type="text/javascript" src="/static/materialize.js"></script>
             </Head>
-            <LandingPage />
+            <LandingPage socket={socket}/>
         </div>
     )
     

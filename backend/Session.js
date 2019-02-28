@@ -3,25 +3,32 @@ var Sessions = [];
 class Session {
     constructor(code) {
         this.code = code;
-        this.people = [];
+        this.people = {};
         Sessions.push(this);
     }
 
-    addPerson(person) {
-        this.people.push(person);
+    getPerson(id) {
+        return this.people[id];
     }
 
-    removePerson(person) {
-        for (let i = 0; i < this.people.length; i++) {
-			if (this.people[i] == person) this.people.splice(i, 1);
-		}
+    updatePerson(id, name) {
+        this.people[id] = name;
+    }
+
+    removePerson(id) {
+        delete this.people[id];
+    }
+
+    getNumberOfPeople() {
+        return Object.keys(this.people).length;
     }
 
     static getSessionFromCode(code) {
-        for (var s in Sessions) {
-            if (s.code == code) return s;
+        for(let i = 0; i < Sessions.length; i++) {
+            let session = Sessions[i];
+            if (session.code == code) return session;
         }
-        return null;
+        return "none";
     }
 
     static generateSession() {

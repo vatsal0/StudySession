@@ -1,62 +1,110 @@
 import Container from "./styles/LandingPageStyle"
 import React, {Component} from "react";
-import io from "socket.io-client";
+import Panel from "./styles/Panel";
+import ErrorPanel from "./styles/ErrorPanel";
+import router from "next/router";
 
-var socket = io('http://localhost:8000');
-socket.on('connect', function(){
-    console.log("Connected to server side");
-});
 
 class LandingPage extends Component {
     state = {
-        joinCode: "",
+        joinCode: 0,
+        joined: false,
+        userName: "",
+        showInvalidCode: false,
+        showInvalidName: false,
+        sessionCode: undefined,
     }
     saveInputToState = e => {
         this.setState({
-            joinCode: e.target.value,
+            [e.target.id]: e.target.value,
         });
     }
 
     sendCode = () => {
-        let code = this.state.joinCode;
+        console.log("Sending code");
+        let code = parseInt(this.state.joinCode);
+        let obj = this;
+        if (!isNaN(code) && Math.log10(code) >= 5 && Math.log10(code) < 6) {
+            console.log("Sending join request");
+            this.props.socket.emit("Join request", code, (confirmed) => {
+                if (confirmed) {
+                    console.log("Confirmed!");
+                    obj.setState({
+                        joined: true,
+                        sessionCode: code
+                    });
+                } else {
+                    console.log("Denied!");
+                    obj.setState({
+                        showInvalidCode: true
+                    });
+                }
+            });
+        } else {
+            obj.setState({
+                showInvalidCode: true
+            });
+        }
         
-        socket.emit("Join request", parseInt(code));
-        socket.once("Join confirmed-"+code, function(confirmed) {
-            if (confirmed) {
-                console.log("Confirmed!");
-            } else {
-                console.log("Denied!");
-            }
-        });
     }
 
-    preventSubmit = e => {
-        e.preventDefault();
+    sendName = () => {
+        if (this.state.userName == "") {
+            this.setState({
+                showInvalidName: true
+            });
+        } else {
+            console.log("Routing to /session..");
+            let name = this.state.userName;
+            let code = this.state.sessionCode;
+            this.props.socket.emit("Set name", this.props.socket.id, code, name);
+            router.push("/session");
+        }
+        
+        
     }
 
     render () {
         return (
-            <div>
-                <Container className="">
+            <div >
+
+                {this.state.showInvalidCode && <ErrorPanel className = "card-panel red darken-3">
+                    <h5 className="white-text"><strong>Invalid session code</strong></h5>
+                    <p className="white-text">The session is either full or doesn't exist. Make sure you entered a valid 6-digit code.</p>
+                    <button className="btn teal lighten-1 waves-effect waves-light" onClick={() => this.setState({showInvalidCode: false})}>
+                        Got it
+                    </button>
+                </ErrorPanel> }
+
+                {this.state.joined && <Panel className="card-panel cyan darken-4" >
+                    <h4 className="white-text">What's your name?</h4>
+                    <input id="userName" type="text" value={this.state.userName} className="validate white-text text-lighten-3" onChange={this.saveInputToState}/>
+                    <label htmlFor="userName" className="white-text text-lighten-3 active" >
+                        Enter your name
+                    </label>
+                    <button className="btn teal lighten-1 waves-effect waves-light" onClick={this.sendName}>
+                        Enter
+                    </button>
+                </Panel>}
+                <Container className="teal darken-4">
                     <h1 className="grey-text text-lighten-4">
                         Study Session
                     </h1>
-                    <form onSubmit={this.preventSubmit}>
-                        <div className="row input-field">
-                            <input id="join_code" type="number" value={this.state.joinCode} className="validate blue-text text-lighten-3" onChange={this.saveInputToState}/>
-                            <label htmlFor="join_code" className="green-text text-lighten-3 active" >
-                                Enter a session code
-                            </label>
-                        </div>
-                    </form>
-                    <button className="btn teal lighten-1 waves-effect waves-light" onClick={this.sendCode}>
+                    <div className="row input-field">
+                        <input id="joinCode" type="number" value={this.state.joinCode} className="validate blue-text text-lighten-3" onChange={this.saveInputToState}/>
+                        <label htmlFor="joinCode" className="green-text text-lighten-3 active" >
+                            Enter a session code
+                        </label>
+                    </div>
+                    <button className="btn teal lighten-1 waves-effect waves-light" onClick={this.sendCode} disabled={this.state.showInvalidCode}>
                         Join
                     </button>
                     <div id="or-container"><p className="grey-text text-lighten-4">OR</p></div>
                     <p className="green-text text-lighten-3 active"><strong>Start a new session</strong></p>
-                    <button className="btn teal lighten-1 waves-effect waves-light">
+                    <button className="btn teal lighten-1 waves-effect waves-light" disabled={this.state.showInvalidCode}>
                         Create
                     </button>
+
                 </Container>
             </div>
         )
