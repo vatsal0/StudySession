@@ -39,6 +39,16 @@ class Session {
         return new Session(generatedCode);
     }
     
+    static disconnectPerson(id) {
+        for(let i = 0; i < Sessions.length; i++) {
+            let session = Sessions[i];
+            if (session.people[id]) {
+                delete session.people[id];
+                console.log(session);
+                break;
+            }
+        }
+    }
 }
 
 module.exports = Session;

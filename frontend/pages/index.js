@@ -1,11 +1,13 @@
 import Head from "next/head";
 import LandingPage from "../components/LandingPage";
 import io from "socket.io-client";
+import Controller from "../lib/Controller";
 
 var socket = io('http://localhost:8000');
 socket.on('connect', function(){
     console.log("Connected to server side");
 });
+Controller.setSocket(socket);
 
 
 const Main = (props) => {

@@ -3,6 +3,7 @@ import React, {Component} from "react";
 import Panel from "./styles/Panel";
 import ErrorPanel from "./styles/ErrorPanel";
 import router from "next/router";
+import Controller from "../lib/Controller";
 
 
 class LandingPage extends Component {
@@ -25,10 +26,11 @@ class LandingPage extends Component {
         let code = parseInt(this.state.joinCode);
         let obj = this;
         if (!isNaN(code) && Math.log10(code) >= 5 && Math.log10(code) < 6) {
-            console.log("Sending join request");
+            console.log("Sending join request", this.props.socket.id);
             this.props.socket.emit("Join request", code, (confirmed) => {
                 if (confirmed) {
                     console.log("Confirmed!");
+                    Controller.setSessionCode(code);
                     obj.setState({
                         joined: true,
                         sessionCode: code
@@ -58,7 +60,12 @@ class LandingPage extends Component {
             let name = this.state.userName;
             let code = this.state.sessionCode;
             this.props.socket.emit("Set name", this.props.socket.id, code, name);
-            router.push("/session");
+            Controller.push({
+                pathname: "/session",
+                query: {code66: code},
+                asPath: "/session"
+            });
+            console.log(Controller.getSessionCode(), this.props.socket.id);
         }
         
         
